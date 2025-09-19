@@ -12,8 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Bike Shopping',
-      theme: AppTheme.themdata,
+      theme: AppTheme.themeData,
       home: const HomeScreen(),
     );
   }

@@ -1,7 +1,12 @@
+import 'package:bike_shopping/gen/fonts.gen.dart';
+import 'package:bike_shopping/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  static final themdata = ThemeData();
+  static get themeData => ThemeData(
+    fontFamily: FontFamily.poppins,
+    scaffoldBackgroundColor: AppColors.background,
+  );
 }
 
 // ThemeData get kThemeData => ThemeData(
