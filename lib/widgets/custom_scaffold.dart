@@ -9,6 +9,7 @@ class CustomScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        fit: StackFit.expand,
         children: [
           CustomPaint(
             painter: ScaffoldPainter(),
