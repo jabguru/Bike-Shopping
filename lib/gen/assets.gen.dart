@@ -36,8 +36,11 @@ class $AssetsImagesGen {
   $AssetsImagesNavBarIconsGen get navBarIcons =>
       const $AssetsImagesNavBarIconsGen();
 
+  /// File path: assets/images/search.svg
+  SvgGenImage get search => const SvgGenImage('assets/images/search.svg');
+
   /// List of all assets
-  List<AssetGenImage> get values => [bike1, bike2, bike3, helmet1];
+  List<dynamic> get values => [bike1, bike2, bike3, helmet1, search];
 }
 
 class $AssetsImagesIconsGen {

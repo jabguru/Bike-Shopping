@@ -1,3 +1,4 @@
+import 'package:bike_shopping/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 class CustomContainer extends StatelessWidget {
@@ -26,14 +27,8 @@ class CustomContainer extends StatelessWidget {
 class ContainerPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final fillGradient = LinearGradient(
-      colors: [Color(0xFF34C8E8), Color(0xFF4E4AF2)],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-    );
-
     final fillPaint = Paint()
-      ..shader = fillGradient.createShader(
+      ..shader = AppTheme.linearGradient.createShader(
         Rect.fromLTWH(0, 0, size.width, size.height),
       );
 

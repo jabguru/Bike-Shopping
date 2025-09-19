@@ -7,6 +7,21 @@ class AppTheme {
     fontFamily: FontFamily.poppins,
     scaffoldBackgroundColor: AppColors.background,
   );
+
+  static final linearGradient = LinearGradient(
+    colors: [Color(0xFF34C8E8), Color(0xFF4E4AF2)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static final neutralGradient = LinearGradient(
+    colors: [
+      Color(0xFFFFFFFF).withValues(alpha: 0.6),
+      Color(0xFF000000).withValues(alpha: 0.6),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
 
 // ThemeData get kThemeData => ThemeData(
