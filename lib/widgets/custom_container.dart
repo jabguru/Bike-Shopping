@@ -15,7 +15,6 @@ class CustomContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
-
       children: [
         CustomPaint(painter: ContainerPainter(), size: Size(width, height)),
         child,

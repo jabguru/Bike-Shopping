@@ -11,8 +11,60 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends State<BottomNavBar>
+    with SingleTickerProviderStateMixin {
   NavBarItem _selectedItem = NavBarItem.home;
+  NavBarItem _previousItem = NavBarItem.home;
+  late AnimationController _animationController;
+  late Animation<double> _slideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _slideAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOutCubic,
+      ),
+    );
+    _animationController.value = 1.0;
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _onItemTapped(NavBarItem item) {
+    if (_selectedItem != item) {
+      setState(() {
+        _previousItem = _selectedItem;
+        _selectedItem = item;
+      });
+      _animationController.reset();
+      _animationController.forward();
+    }
+  }
+
+  double _getItemPosition(NavBarItem item, BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final containerWidth = 60.0;
+    final availableWidth = screenWidth - 48 - containerWidth;
+    final iconSpacing = availableWidth / 4;
+    final iconIndex = item.index;
+    return iconIndex * iconSpacing;
+  }
+
+  double _getCurrentPosition(BuildContext context) {
+    final previousPos = _getItemPosition(_previousItem, context);
+    final currentPos = _getItemPosition(_selectedItem, context);
+    return previousPos + (currentPos - previousPos) * _slideAnimation.value;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +78,23 @@ class _BottomNavBarState extends State<BottomNavBar> {
             size: Size(double.infinity, 103.5),
             painter: BottomNavBarPainter(),
           ),
+          AnimatedBuilder(
+            animation: _slideAnimation,
+            builder: (context, child) {
+              return Positioned(
+                left: 24 + _getCurrentPosition(context),
+                bottom: 32,
+                child: CustomContainer(
+                  child: _getSelectedIcon().svg(
+                    colorFilter: ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Row(
@@ -36,41 +105,31 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   icon: Assets.images.navBarIcons.bicycle,
                   value: NavBarItem.home,
                   selected: _selectedItem,
-                  onTap: () => setState(() {
-                    _selectedItem = NavBarItem.home;
-                  }),
+                  onTap: () => _onItemTapped(NavBarItem.home),
                 ),
                 NavIcon(
                   icon: Assets.images.navBarIcons.map,
                   value: NavBarItem.map,
                   selected: _selectedItem,
-                  onTap: () => setState(() {
-                    _selectedItem = NavBarItem.map;
-                  }),
+                  onTap: () => _onItemTapped(NavBarItem.map),
                 ),
                 NavIcon(
                   icon: Assets.images.navBarIcons.cart,
                   value: NavBarItem.cart,
                   selected: _selectedItem,
-                  onTap: () => setState(() {
-                    _selectedItem = NavBarItem.cart;
-                  }),
+                  onTap: () => _onItemTapped(NavBarItem.cart),
                 ),
                 NavIcon(
                   icon: Assets.images.navBarIcons.person,
                   value: NavBarItem.profile,
                   selected: _selectedItem,
-                  onTap: () => setState(() {
-                    _selectedItem = NavBarItem.profile;
-                  }),
+                  onTap: () => _onItemTapped(NavBarItem.profile),
                 ),
                 NavIcon(
                   icon: Assets.images.navBarIcons.doc,
                   value: NavBarItem.doc,
                   selected: _selectedItem,
-                  onTap: () => setState(() {
-                    _selectedItem = NavBarItem.doc;
-                  }),
+                  onTap: () => _onItemTapped(NavBarItem.doc),
                 ),
               ],
             ),
@@ -78,6 +137,21 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ],
       ),
     );
+  }
+
+  SvgGenImage _getSelectedIcon() {
+    switch (_selectedItem) {
+      case NavBarItem.home:
+        return Assets.images.navBarIcons.bicycle;
+      case NavBarItem.map:
+        return Assets.images.navBarIcons.map;
+      case NavBarItem.cart:
+        return Assets.images.navBarIcons.cart;
+      case NavBarItem.profile:
+        return Assets.images.navBarIcons.person;
+      case NavBarItem.doc:
+        return Assets.images.navBarIcons.doc;
+    }
   }
 }
 
@@ -96,24 +170,24 @@ class NavIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return selected == value
-        ? Padding(
-            padding: const EdgeInsets.only(bottom: 32.0),
-            child: CustomContainer(
-              child: icon.svg(
-                colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              ),
+    final isSelected = selected == value;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 32.0),
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 200),
+          opacity: isSelected ? 0.0 : 0.6,
+          child: icon.svg(
+            colorFilter: ColorFilter.mode(
+              Colors.white.withValues(alpha: 0.6),
+              BlendMode.srcIn,
             ),
-          )
-        : GestureDetector(
-            onTap: onTap,
-            child: icon.svg(
-              colorFilter: ColorFilter.mode(
-                Colors.white.withValues(alpha: 0.6),
-                BlendMode.srcIn,
-              ),
-            ),
-          );
+          ),
+        ),
+      ),
+    );
   }
 }
 
