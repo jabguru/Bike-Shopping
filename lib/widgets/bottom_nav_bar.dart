@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 
 enum NavBarItem { home, map, cart, profile, doc }
 
-class BottomNavBar extends StatelessWidget {
+class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
+
+  @override
+  State<BottomNavBar> createState() => _BottomNavBarState();
+}
+
+class _BottomNavBarState extends State<BottomNavBar> {
+  NavBarItem _selectedItem = NavBarItem.home;
 
   @override
   Widget build(BuildContext context) {
@@ -19,31 +26,54 @@ class BottomNavBar extends StatelessWidget {
             size: Size(double.infinity, 103.5),
             painter: BottomNavBarPainter(),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              NavIcon(
-                icon: Assets.images.navBarIcons.bicycle,
-                value: NavBarItem.home,
-              ),
-              NavIcon(
-                icon: Assets.images.navBarIcons.map,
-                value: NavBarItem.map,
-              ),
-              NavIcon(
-                icon: Assets.images.navBarIcons.cart,
-                value: NavBarItem.cart,
-              ),
-              NavIcon(
-                icon: Assets.images.navBarIcons.person,
-                value: NavBarItem.profile,
-              ),
-              NavIcon(
-                icon: Assets.images.navBarIcons.doc,
-                value: NavBarItem.doc,
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                NavIcon(
+                  icon: Assets.images.navBarIcons.bicycle,
+                  value: NavBarItem.home,
+                  selected: _selectedItem,
+                  onTap: () => setState(() {
+                    _selectedItem = NavBarItem.home;
+                  }),
+                ),
+                NavIcon(
+                  icon: Assets.images.navBarIcons.map,
+                  value: NavBarItem.map,
+                  selected: _selectedItem,
+                  onTap: () => setState(() {
+                    _selectedItem = NavBarItem.map;
+                  }),
+                ),
+                NavIcon(
+                  icon: Assets.images.navBarIcons.cart,
+                  value: NavBarItem.cart,
+                  selected: _selectedItem,
+                  onTap: () => setState(() {
+                    _selectedItem = NavBarItem.cart;
+                  }),
+                ),
+                NavIcon(
+                  icon: Assets.images.navBarIcons.person,
+                  value: NavBarItem.profile,
+                  selected: _selectedItem,
+                  onTap: () => setState(() {
+                    _selectedItem = NavBarItem.profile;
+                  }),
+                ),
+                NavIcon(
+                  icon: Assets.images.navBarIcons.doc,
+                  value: NavBarItem.doc,
+                  selected: _selectedItem,
+                  onTap: () => setState(() {
+                    _selectedItem = NavBarItem.doc;
+                  }),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -52,19 +82,36 @@ class BottomNavBar extends StatelessWidget {
 }
 
 class NavIcon extends StatelessWidget {
-  const NavIcon({required this.icon, required this.value, super.key});
+  const NavIcon({
+    required this.icon,
+    required this.value,
+    required this.selected,
+    required this.onTap,
+    super.key,
+  });
   final SvgGenImage icon;
   final NavBarItem value;
+  final NavBarItem selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    bool isSelected = value == NavBarItem.home;
-    return isSelected
-        ? CustomContainer()
-        : icon.svg(
-            colorFilter: ColorFilter.mode(
-              isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
-              BlendMode.srcIn,
+    return selected == value
+        ? Padding(
+            padding: const EdgeInsets.only(bottom: 32.0),
+            child: CustomContainer(
+              child: icon.svg(
+                colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              ),
+            ),
+          )
+        : GestureDetector(
+            onTap: onTap,
+            child: icon.svg(
+              colorFilter: ColorFilter.mode(
+                Colors.white.withValues(alpha: 0.6),
+                BlendMode.srcIn,
+              ),
             ),
           );
   }
@@ -88,22 +135,6 @@ class BottomNavBarPainter extends CustomPainter {
       )
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3);
 
-    // final strokeGradient = LinearGradient(
-    //   colors: [
-    //     Color(0xFFFFFFFF).withValues(alpha: .2),
-    //     Color(0xFF000000).withValues(alpha: 0.0),
-    //   ],
-    //   begin: Alignment.centerLeft,
-    //   end: Alignment.centerRight,
-    // );
-
-    // final strokePaint = Paint()
-    //   ..shader = strokeGradient.createShader(
-    //     Rect.fromLTWH(0, 0, size.width, size.height),
-    //   )
-    //   ..style = PaintingStyle.stroke
-    //   ..strokeWidth = 2.0;
-
     final path = Path()
       ..moveTo(0, size.height * 0.30)
       ..lineTo(size.width, 0)
@@ -111,17 +142,7 @@ class BottomNavBarPainter extends CustomPainter {
       ..lineTo(0, size.height)
       ..close();
 
-    // final inset = strokePaint.strokeWidth / 2;
-    //
-    // final strokePath = Path()
-    //   ..moveTo(inset, 20 + inset)
-    //   ..lineTo(size.width - inset, inset)
-    //   ..lineTo(size.width - inset, size.height - inset)
-    //   ..lineTo(inset, size.height - inset)
-    //   ..close();
-
     canvas.drawPath(path, fillPaint);
-    // canvas.drawPath(strokePath, strokePaint);
   }
 
   @override

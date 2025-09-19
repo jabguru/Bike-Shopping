@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 
 class CustomContainer extends StatelessWidget {
-  const CustomContainer({super.key, this.width = 60, this.height = 60.0});
+  const CustomContainer({
+    super.key,
+    this.width = 60,
+    this.height = 60.0,
+    required this.child,
+  });
   final double width;
   final double height;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(painter: ContainerPainter(), size: Size(width, height));
+    return Stack(
+      alignment: Alignment.center,
+
+      children: [
+        CustomPaint(painter: ContainerPainter(), size: Size(width, height)),
+        child,
+      ],
+    );
   }
 }
 
@@ -45,6 +58,7 @@ class ContainerPainter extends CustomPainter {
       ..close();
 
     canvas.drawPath(path, fillPaint);
+    canvas.drawShadow(path, Color(0xFF10141C).withValues(alpha: .60), 30, true);
   }
 
   @override
