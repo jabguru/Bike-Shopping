@@ -104,33 +104,15 @@ class _BottomNavBarState extends State<BottomNavBar>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                NavIcon(
-                  value: NavBarItem.home,
-                  selected: _selectedItem,
-                  onTap: () => _onItemTapped(NavBarItem.home),
-                ),
-                NavIcon(
-                  value: NavBarItem.map,
-                  selected: _selectedItem,
-                  onTap: () => _onItemTapped(NavBarItem.map),
-                ),
-                NavIcon(
-                  value: NavBarItem.cart,
-                  selected: _selectedItem,
-                  onTap: () => _onItemTapped(NavBarItem.cart),
-                ),
-                NavIcon(
-                  value: NavBarItem.profile,
-                  selected: _selectedItem,
-                  onTap: () => _onItemTapped(NavBarItem.profile),
-                ),
-                NavIcon(
-                  value: NavBarItem.doc,
-                  selected: _selectedItem,
-                  onTap: () => _onItemTapped(NavBarItem.doc),
-                ),
-              ],
+              children: NavBarItem.values
+                  .map(
+                    (item) => NavIcon(
+                      value: item,
+                      selected: _selectedItem,
+                      onTap: () => _onItemTapped(item),
+                    ),
+                  )
+                  .toList(),
             ),
           ),
         ],
