@@ -19,31 +19,34 @@ class _CategoriesState extends State<Categories> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 99.0,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            top: -14.0,
-            width: MediaQuery.sizeOf(context).width - 40.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: Category.values
-                  .map(
-                    (category) => CategoryIcon(
-                      category: category,
-                      selected: _selected,
-                      onTap: () => setState(() {
-                        _selected = category;
-                      }),
-                    ),
-                  )
-                  .toList(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: SizedBox(
+        height: eqH(context, 99.0),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              top: -eqH(context, 14.0),
+              width: MediaQuery.sizeOf(context).width - 60.0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: Category.values
+                    .map(
+                      (category) => CategoryIcon(
+                        category: category,
+                        selected: _selected,
+                        onTap: () => setState(() {
+                          _selected = category;
+                        }),
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -110,7 +113,7 @@ class CategoryIcon extends StatelessWidget {
           strokeOpacity: isSelected ? 0.6 : 0.2,
           child: Center(child: child),
         ),
-        VerticalSpacing(Category.values.indexOf(category) * 10),
+        VerticalSpacing(Category.values.indexOf(category) * eqH(context, 10.0)),
       ],
     );
   }

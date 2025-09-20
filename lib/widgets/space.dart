@@ -19,3 +19,15 @@ class VerticalSpacing extends StatelessWidget {
     return SizedBox(height: height);
   }
 }
+
+double eqH(BuildContext context, double height) {
+  double heightInDesign = 844.0;
+  double screenHeight = MediaQuery.sizeOf(context).height;
+  return (height / heightInDesign) * screenHeight;
+}
+
+double eqW(BuildContext context, double width) {
+  double widthInDesign = 390.0;
+  double screenWidth = MediaQuery.sizeOf(context).width;
+  return (width / widthInDesign) * screenWidth;
+}
