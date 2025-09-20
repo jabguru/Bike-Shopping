@@ -91,6 +91,7 @@ class _BottomNavBarState extends State<BottomNavBar>
                   hasShadow: true,
                   radius: 10.0,
                   gradient: AppTheme.linearGradient,
+                  skewRatio: 0.75,
                   child: _getSelectedIcon().svg(
                     colorFilter: ColorFilter.mode(
                       Colors.white,

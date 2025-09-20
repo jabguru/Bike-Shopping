@@ -18,6 +18,7 @@ class CustomContainer extends StatelessWidget {
     required this.radius,
     required this.child,
     required this.gradient,
+    required this.skewRatio,
   });
   final double width;
   final double height;
@@ -30,6 +31,7 @@ class CustomContainer extends StatelessWidget {
   final LinearGradient gradient;
   final double radius;
   final double blurSigma;
+  final double skewRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +46,14 @@ class CustomContainer extends StatelessWidget {
                       radius: radius,
                       hasShadow: hasShadow,
                       isBlur: isBlur,
+                      skewRatio: skewRatio,
                     )
                   : FullSkewPainter(
                       gradient: gradient,
                       radius: radius,
                       hasShadow: hasShadow,
                       isBlur: isBlur,
+                      skewRatio: skewRatio,
                     ),
               size: Size(width, height),
             ),
@@ -58,6 +62,7 @@ class CustomContainer extends StatelessWidget {
                 clipper: CustomContainerClipper(
                   isBottomRightSkew: isBottomRightSkew,
                   radius: radius,
+                  skewRatio: skewRatio,
                 ),
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
@@ -77,9 +82,9 @@ class CustomContainer extends StatelessWidget {
                     ? BottomRightSkewPainter(
                         isStroke: true,
                         radius: radius,
-
                         isBlur: isBlur,
                         hasShadow: hasShadow,
+                        skewRatio: skewRatio,
                       )
                     : FullSkewPainter(
                         isStroke: true,
@@ -87,6 +92,7 @@ class CustomContainer extends StatelessWidget {
                         radius: radius,
                         isBlur: isBlur,
                         hasShadow: hasShadow,
+                        skewRatio: skewRatio,
                       ),
                 size: Size(width, height),
               ),
@@ -105,16 +111,22 @@ class FullSkewPainter extends CustomPainter {
     required this.radius,
     required this.isBlur,
     required this.hasShadow,
+    required this.skewRatio,
   });
   final bool isStroke;
   final LinearGradient gradient;
   final double radius;
   final bool isBlur;
   final bool hasShadow;
+  final double skewRatio;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = CustomPaths.fullSkewPath(size, radius);
+    Path path = CustomPaths.fullSkewPath(
+      size: size,
+      radius: radius,
+      skewRatio: skewRatio,
+    );
 
     if (isStroke) {
       final paint = Paint()
@@ -158,15 +170,21 @@ class BottomRightSkewPainter extends CustomPainter {
     required this.radius,
     required this.isBlur,
     required this.hasShadow,
+    required this.skewRatio,
   });
   final bool isStroke;
   final double radius;
   final bool isBlur;
   final bool hasShadow;
+  final double skewRatio;
 
   @override
   void paint(Canvas canvas, Size size) {
-    Path path = CustomPaths.bottomRightKewPath(size, radius);
+    Path path = CustomPaths.bottomRightKewPath(
+      size: size,
+      radius: radius,
+      skewRatio: skewRatio,
+    );
 
     if (isStroke) {
       LinearGradient strokeGradient = LinearGradient(
@@ -214,17 +232,27 @@ class CustomContainerClipper extends CustomClipper<Path> {
   CustomContainerClipper({
     required this.isBottomRightSkew,
     required this.radius,
+    required this.skewRatio,
   });
 
   final bool isBottomRightSkew;
   final double radius;
+  final double skewRatio;
 
   @override
   Path getClip(Size size) {
     if (isBottomRightSkew) {
-      return CustomPaths.bottomRightKewPath(size, radius);
+      return CustomPaths.bottomRightKewPath(
+        size: size,
+        radius: radius,
+        skewRatio: skewRatio,
+      );
     } else {
-      return CustomPaths.fullSkewPath(size, radius);
+      return CustomPaths.fullSkewPath(
+        size: size,
+        radius: radius,
+        skewRatio: skewRatio,
+      );
     }
   }
 
@@ -233,18 +261,22 @@ class CustomContainerClipper extends CustomClipper<Path> {
 }
 
 class CustomPaths {
-  static Path bottomRightKewPath(Size size, double radius) {
+  static Path bottomRightKewPath({
+    required Size size,
+    required double radius,
+    required double skewRatio,
+  }) {
     // final radius = 20.0;
     final path = Path()
       ..moveTo(radius, 0)
       ..lineTo(size.width - radius, 0)
       ..quadraticBezierTo(size.width, 0, size.width, radius)
-      ..lineTo(size.width, size.height * 0.85 - radius)
+      ..lineTo(size.width, size.height * skewRatio - radius)
       ..quadraticBezierTo(
         size.width,
-        size.height * 0.85,
+        size.height * skewRatio,
         size.width - radius,
-        size.height * 0.85,
+        size.height * skewRatio,
       )
       ..lineTo(radius, size.height)
       ..quadraticBezierTo(0, size.height, 0, size.height - radius)
@@ -254,21 +286,32 @@ class CustomPaths {
     return path;
   }
 
-  static Path fullSkewPath(Size size, double radius) {
+  static Path fullSkewPath({
+    required Size size,
+    required double radius,
+    required double skewRatio,
+  }) {
     // final radius = 10.0;
+    // size.height * 0.85,
+
     final path = Path()
       ..moveTo(radius, size.height)
-      ..lineTo(size.width - radius + (radius / 2), size.height * 0.85)
+      ..lineTo(size.width - radius + (radius / 2), size.height * skewRatio)
       ..quadraticBezierTo(
         size.width,
-        size.height * 0.85,
+        size.height * skewRatio,
         size.width,
-        size.height * 0.85 - radius,
+        size.height * skewRatio - radius,
       )
       ..lineTo(size.width, radius)
       ..quadraticBezierTo(size.width, 0, size.width - radius, 0)
-      ..lineTo(radius - (radius / 2), size.height * 0.15)
-      ..quadraticBezierTo(0, size.height * 0.15, 0, size.height * 0.15 + radius)
+      ..lineTo(radius - (radius / 2), size.height * (1 - skewRatio))
+      ..quadraticBezierTo(
+        0,
+        size.height * (1 - skewRatio),
+        0,
+        size.height * (1 - skewRatio) + radius,
+      )
       ..lineTo(0, size.height - radius)
       ..quadraticBezierTo(0, size.height, radius, size.height)
       ..close();

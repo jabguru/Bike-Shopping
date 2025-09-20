@@ -76,6 +76,7 @@ class ListingItem extends StatelessWidget {
             hasStroke: true,
             isBlur: true,
             blurSigma: 30.0,
+            skewRatio: 0.90,
             child: SizedBox(
               width: eqW(context, 165.0),
               child: Padding(
