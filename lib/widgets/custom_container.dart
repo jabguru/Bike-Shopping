@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bike_shopping/theme/colors.dart';
 import 'package:bike_shopping/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +9,12 @@ class CustomContainer extends StatelessWidget {
     super.key,
     this.width = 60,
     this.height = 60.0,
-    required this.child,
     this.isBottomRightSkew = false,
     this.hasStroke = false,
     this.isCentered = false,
+    this.isBlur = false,
+    required this.child,
+    required this.gradient,
   });
   final double width;
   final double height;
@@ -18,25 +22,42 @@ class CustomContainer extends StatelessWidget {
   final bool isBottomRightSkew;
   final bool hasStroke;
   final bool isCentered;
+  final bool isBlur;
+  final LinearGradient gradient;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: isCentered ? Alignment.center : AlignmentDirectional.topStart,
       children: [
+        if (isBlur)
+          ClipPath(
+            clipper: CustomContainerClipper(
+              isBottomRightSkew: isBottomRightSkew,
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+              child: Container(
+                width: width,
+                height: height,
+                decoration: BoxDecoration(gradient: gradient),
+              ),
+            ),
+          ),
         Stack(
           children: [
-            CustomPaint(
-              painter: isBottomRightSkew
-                  ? BottomRightSkewPainter()
-                  : FullSkewPainter(),
-              size: Size(width, height),
-            ),
+            if (!isBlur)
+              CustomPaint(
+                painter: isBottomRightSkew
+                    ? BottomRightSkewPainter()
+                    : FullSkewPainter(gradient: gradient),
+                size: Size(width, height),
+              ),
             if (hasStroke)
               CustomPaint(
                 painter: isBottomRightSkew
                     ? BottomRightSkewPainter(isStroke: true)
-                    : FullSkewPainter(isStroke: true),
+                    : FullSkewPainter(isStroke: true, gradient: gradient),
                 size: Size(width, height),
               ),
           ],
@@ -48,29 +69,13 @@ class CustomContainer extends StatelessWidget {
 }
 
 class FullSkewPainter extends CustomPainter {
-  const FullSkewPainter({this.isStroke = false});
+  const FullSkewPainter({this.isStroke = false, required this.gradient});
   final bool isStroke;
+  final LinearGradient gradient;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final radius = 10.0;
-
-    final path = Path()
-      ..moveTo(radius, size.height)
-      ..lineTo(size.width - radius + 5, size.height * 0.75)
-      ..quadraticBezierTo(
-        size.width,
-        size.height * 0.75,
-        size.width,
-        size.height * 0.75 - radius,
-      )
-      ..lineTo(size.width, radius)
-      ..quadraticBezierTo(size.width, 0, size.width - radius, 0)
-      ..lineTo(radius - 5, size.height * 0.25)
-      ..quadraticBezierTo(0, size.height * 0.25, 0, size.height * 0.25 + radius)
-      ..lineTo(0, size.height - radius)
-      ..quadraticBezierTo(0, size.height, radius, size.height)
-      ..close();
+    Path path = CustomPaths.fullSkewPath(size);
 
     if (isStroke) {
       final paint = Paint()
@@ -84,7 +89,7 @@ class FullSkewPainter extends CustomPainter {
       canvas.drawPath(path, paint);
     } else {
       final fillPaint = Paint()
-        ..shader = AppTheme.linearGradient.createShader(
+        ..shader = gradient.createShader(
           Rect.fromLTWH(0, 0, size.width, size.height),
         );
       canvas.drawPath(path, fillPaint);
@@ -109,24 +114,7 @@ class BottomRightSkewPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final radius = 20.0;
-
-    final path = Path()
-      ..moveTo(radius, 0)
-      ..lineTo(size.width - radius, 0)
-      ..quadraticBezierTo(size.width, 0, size.width, radius)
-      ..lineTo(size.width, size.height * 0.85 - radius)
-      ..quadraticBezierTo(
-        size.width,
-        size.height * 0.85,
-        size.width - radius,
-        size.height * 0.85,
-      )
-      ..lineTo(radius, size.height)
-      ..quadraticBezierTo(0, size.height, 0, size.height - radius)
-      ..lineTo(0, radius)
-      ..quadraticBezierTo(0, 0, radius, 0)
-      ..close();
+    Path path = CustomPaths.bottomRightKewPath(size);
 
     if (isStroke) {
       LinearGradient strokeGradient = LinearGradient(
@@ -152,8 +140,7 @@ class BottomRightSkewPainter extends CustomPainter {
       final fillPaint = Paint()
         ..shader = AppTheme.greyBlueGradient.createShader(
           Rect.fromLTWH(0, 0, size.width, size.height),
-        )
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3);
+        );
       canvas.drawPath(path, fillPaint);
       canvas.drawShadow(
         path,
@@ -167,5 +154,67 @@ class BottomRightSkewPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
+  }
+}
+
+class CustomContainerClipper extends CustomClipper<Path> {
+  final bool isBottomRightSkew;
+
+  CustomContainerClipper({required this.isBottomRightSkew});
+
+  @override
+  Path getClip(Size size) {
+    if (isBottomRightSkew) {
+      return CustomPaths.bottomRightKewPath(size);
+    } else {
+      return CustomPaths.fullSkewPath(size);
+    }
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+class CustomPaths {
+  static Path bottomRightKewPath(Size size) {
+    final radius = 20.0;
+    final path = Path()
+      ..moveTo(radius, 0)
+      ..lineTo(size.width - radius, 0)
+      ..quadraticBezierTo(size.width, 0, size.width, radius)
+      ..lineTo(size.width, size.height * 0.85 - radius)
+      ..quadraticBezierTo(
+        size.width,
+        size.height * 0.85,
+        size.width - radius,
+        size.height * 0.85,
+      )
+      ..lineTo(radius, size.height)
+      ..quadraticBezierTo(0, size.height, 0, size.height - radius)
+      ..lineTo(0, radius)
+      ..quadraticBezierTo(0, 0, radius, 0)
+      ..close();
+    return path;
+  }
+
+  static Path fullSkewPath(Size size) {
+    final radius = 10.0;
+    final path = Path()
+      ..moveTo(radius, size.height)
+      ..lineTo(size.width - radius + 5, size.height * 0.75)
+      ..quadraticBezierTo(
+        size.width,
+        size.height * 0.75,
+        size.width,
+        size.height * 0.75 - radius,
+      )
+      ..lineTo(size.width, radius)
+      ..quadraticBezierTo(size.width, 0, size.width - radius, 0)
+      ..lineTo(radius - 5, size.height * 0.25)
+      ..quadraticBezierTo(0, size.height * 0.25, 0, size.height * 0.25 + radius)
+      ..lineTo(0, size.height - radius)
+      ..quadraticBezierTo(0, size.height, radius, size.height)
+      ..close();
+    return path;
   }
 }

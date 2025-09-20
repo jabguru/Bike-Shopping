@@ -1,5 +1,6 @@
 import 'package:bike_shopping/gen/assets.gen.dart';
 import 'package:bike_shopping/theme/colors.dart';
+import 'package:bike_shopping/theme/theme.dart';
 import 'package:bike_shopping/widgets/bottom_nav_bar.dart';
 import 'package:bike_shopping/widgets/button.dart';
 import 'package:bike_shopping/widgets/custom_container.dart';
@@ -44,9 +45,11 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           CustomContainer(
                             width: double.infinity,
+                            gradient: AppTheme.greyBlueGradient,
                             height: 240.0,
                             isBottomRightSkew: true,
                             hasStroke: true,
+                            isBlur: true,
                             child: Padding(
                               padding: const EdgeInsets.fromLTRB(
                                 17.0,

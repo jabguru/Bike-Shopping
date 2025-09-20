@@ -1,4 +1,5 @@
 import 'package:bike_shopping/gen/assets.gen.dart';
+import 'package:bike_shopping/theme/theme.dart';
 import 'package:bike_shopping/widgets/custom_container.dart';
 import 'package:flutter/material.dart';
 
@@ -87,6 +88,7 @@ class _BottomNavBarState extends State<BottomNavBar>
                 child: CustomContainer(
                   hasStroke: true,
                   isCentered: true,
+                  gradient: AppTheme.linearGradient,
                   child: _getSelectedIcon().svg(
                     colorFilter: ColorFilter.mode(
                       Colors.white,
