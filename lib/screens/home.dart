@@ -58,23 +58,27 @@ class HomeScreen extends StatelessWidget {
                               Positioned(
                                 top: -eqH(context, 24.0),
                                 width: MediaQuery.sizeOf(context).width - 40.0,
-                                child: GridView.builder(
-                                  padding: EdgeInsets.zero,
-                                  shrinkWrap: true,
-                                  itemCount: listings.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        mainAxisExtent:
-                                            eqH(context, 241.0) + 16,
-                                        crossAxisSpacing: 20.0,
-                                      ),
-                                  itemBuilder: (context, index) {
-                                    return ListingItem(
-                                      listing: listings[index],
-                                      index: index,
-                                    );
-                                  },
+                                child: ClipPath(
+                                  clipper: GridViewSlantTopClipper(),
+                                  child: GridView.builder(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    itemCount: listings.length,
+                                    clipBehavior: Clip.none,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          mainAxisExtent:
+                                              eqH(context, 241.0) + 16,
+                                          crossAxisSpacing: 20.0,
+                                        ),
+                                    itemBuilder: (context, index) {
+                                      return ListingItem(
+                                        listing: listings[index],
+                                        index: index,
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
@@ -91,5 +95,24 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class GridViewSlantTopClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path()
+      ..moveTo(0.0, 12.0)
+      ..lineTo(size.width, -32.0)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..lineTo(0.0, 12.0)
+      ..close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
   }
 }
