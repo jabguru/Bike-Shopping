@@ -83,6 +83,7 @@ class _BottomNavBarState extends State<BottomNavBar>
       width: double.infinity,
       child: Stack(
         fit: StackFit.expand,
+        clipBehavior: Clip.none,
         children: [
           ClipPath(
             clipper: BottomNavClipper(),
@@ -106,14 +107,14 @@ class _BottomNavBarState extends State<BottomNavBar>
             builder: (context, child) {
               return Positioned(
                 left: 24 + _getCurrentPosition(context),
-                bottom: 32,
+                bottom: 40,
                 child: CustomContainer(
                   hasStroke: true,
                   isCentered: true,
                   hasShadow: true,
                   radius: 10.0,
                   gradient: AppTheme.linearGradient,
-                  skewRatio: 0.75,
+                  skewRatio: 0.80,
                   child: _getSelectedIcon().svg(
                     colorFilter: ColorFilter.mode(
                       Colors.white,
@@ -125,7 +126,7 @@ class _BottomNavBarState extends State<BottomNavBar>
             },
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.fromLTRB(24.0, 16.0, 24.0, 0.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -238,7 +239,7 @@ class BottomNavBarStrokePainter extends CustomPainter {
 
 Path _getNavBarPath(Size size) {
   final path = Path()
-    ..moveTo(0, size.height * 0.30)
+    ..moveTo(0, size.height * 0.25)
     ..lineTo(size.width, 0)
     ..lineTo(size.width, size.height)
     ..lineTo(0, size.height)
