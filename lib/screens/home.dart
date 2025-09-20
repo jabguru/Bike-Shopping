@@ -45,32 +45,42 @@ class HomeScreen extends StatelessWidget {
                   ),
                   VerticalSpacing(24.0),
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          FeaturedBike(),
-                          Categories(),
-                          GridView.builder(
-                            padding: EdgeInsets.zero,
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: listings.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  mainAxisExtent: eqH(context, 241.0) + 16,
-                                  crossAxisSpacing: 20.0,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FeaturedBike(),
+                        Categories(),
+                        VerticalSpacing(16.0),
+                        Expanded(
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              Positioned(
+                                top: -eqH(context, 24.0),
+                                width: MediaQuery.sizeOf(context).width - 40.0,
+                                child: GridView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  itemCount: listings.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        mainAxisExtent:
+                                            eqH(context, 241.0) + 16,
+                                        crossAxisSpacing: 20.0,
+                                      ),
+                                  itemBuilder: (context, index) {
+                                    return ListingItem(
+                                      listing: listings[index],
+                                      index: index,
+                                    );
+                                  },
                                 ),
-                            itemBuilder: (context, index) {
-                              return ListingItem(
-                                listing: listings[index],
-                                index: index,
-                              );
-                            },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

@@ -48,32 +48,6 @@ List<Listing> listings = [
     price: "1,999.99",
     image: Assets.images.bike3,
   ),
-  Listing(
-    name: "PEUGEOT - LR01",
-    type: "Road Bike",
-    price: "1,999.99",
-    image: Assets.images.bike2,
-    isFavorite: true,
-  ),
-  Listing(
-    name: "SMITH - Trade",
-    type: "Road Helmet",
-    price: "120",
-    image: Assets.images.helmet1,
-  ),
-  Listing(
-    name: "SMITH - Trade",
-    type: "Road Helmet",
-    price: "120",
-    image: Assets.images.helmet1,
-    isFavorite: true,
-  ),
-  Listing(
-    name: "PILOT - Chromoly ",
-    type: "Mountain Bike",
-    price: "1,999.99",
-    image: Assets.images.bike3,
-  ),
 ];
 
 class ListingItem extends StatelessWidget {
