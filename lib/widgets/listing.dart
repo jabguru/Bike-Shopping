@@ -51,6 +51,8 @@ List<Listing> listings = [
 ];
 
 class ListingItem extends StatelessWidget {
+  static const double height = 241.0;
+
   const ListingItem({required this.listing, required this.index, super.key});
   final Listing listing;
   final int index;
@@ -69,7 +71,7 @@ class ListingItem extends StatelessWidget {
         Positioned(
           top: _topOffset,
           child: CustomContainer(
-            height: eqH(context, 241.0),
+            height: eqH(context, height),
             width: eqW(context, 165.0),
             radius: 20.0,
             gradient: AppTheme.greyBlueGradient.withOpacity(0.6),

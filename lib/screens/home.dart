@@ -69,7 +69,8 @@ class HomeScreen extends StatelessWidget {
                                         SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 2,
                                           mainAxisExtent:
-                                              eqH(context, 241.0) + 16,
+                                              eqH(context, ListingItem.height) +
+                                              16,
                                           crossAxisSpacing: 20.0,
                                         ),
                                     itemBuilder: (context, index) {
