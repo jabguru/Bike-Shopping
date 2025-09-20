@@ -8,26 +8,32 @@ class Button extends StatelessWidget {
     this.width,
     this.height,
     this.backgroundGradient,
+    this.onTap,
     super.key,
   });
   final Widget child;
   final double? width;
   final double? height;
   final LinearGradient? backgroundGradient;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GradientStroke(
-      width: width ?? 44.0,
-      height: height ?? 44.0,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          gradient: backgroundGradient ?? AppTheme.linearGradient,
-          borderRadius: BorderRadius.circular(10.0),
+    return GestureDetector(
+      onTap: onTap,
+      child: GradientStroke(
+        width: width ?? 44.0,
+        height: height ?? 44.0,
+        child: AnimatedContainer(
+          duration: Durations.short4,
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            gradient: backgroundGradient ?? AppTheme.linearGradient,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Padding(padding: EdgeInsets.all(12.0), child: child),
         ),
-        child: Padding(padding: EdgeInsets.all(12.0), child: child),
       ),
     );
   }
