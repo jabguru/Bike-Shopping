@@ -17,6 +17,7 @@ class FeaturedBike extends StatelessWidget {
       isBottomRightSkew: true,
       hasStroke: true,
       isBlur: true,
+      hasShadow: true,
       radius: 20.0,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(17.0, 30.0, 17.0, 24.0),

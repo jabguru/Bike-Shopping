@@ -1,12 +1,11 @@
 import 'package:bike_shopping/gen/assets.gen.dart';
 import 'package:bike_shopping/theme/colors.dart';
-import 'package:bike_shopping/theme/theme.dart';
 import 'package:bike_shopping/widgets/bottom_nav_bar.dart';
 import 'package:bike_shopping/widgets/button.dart';
 import 'package:bike_shopping/widgets/category.dart';
-import 'package:bike_shopping/widgets/custom_container.dart';
 import 'package:bike_shopping/widgets/custom_scaffold.dart';
 import 'package:bike_shopping/widgets/featured_bike.dart';
+import 'package:bike_shopping/widgets/listing.dart';
 import 'package:bike_shopping/widgets/space.dart';
 import 'package:flutter/material.dart';
 
@@ -48,17 +47,27 @@ class HomeScreen extends StatelessWidget {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           FeaturedBike(),
                           Categories(),
-                          CustomContainer(
-                            height: eqH(context, 241.0),
-                            width: eqW(context, 165.0),
-                            radius: 20.0,
-                            gradient: AppTheme.greyBlueGradient.withOpacity(
-                              0.6,
-                            ),
-                            child: Column(children: []),
+                          GridView.builder(
+                            padding: EdgeInsets.zero,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: listings.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisExtent: eqH(context, 241.0) + 16,
+                                  crossAxisSpacing: 20.0,
+                                ),
+                            itemBuilder: (context, index) {
+                              return ListingItem(
+                                listing: listings[index],
+                                index: index,
+                              );
+                            },
                           ),
                         ],
                       ),

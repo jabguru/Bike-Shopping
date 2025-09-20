@@ -57,6 +57,13 @@ class $AssetsImagesIconsGen {
   SvgGenImage get electric =>
       const SvgGenImage('assets/images/icons/electric.svg');
 
+  /// File path: assets/images/icons/heart-selected.svg
+  SvgGenImage get heartSelected =>
+      const SvgGenImage('assets/images/icons/heart-selected.svg');
+
+  /// File path: assets/images/icons/heart.svg
+  SvgGenImage get heart => const SvgGenImage('assets/images/icons/heart.svg');
+
   /// File path: assets/images/icons/mountain.svg
   SvgGenImage get mountain =>
       const SvgGenImage('assets/images/icons/mountain.svg');
@@ -65,7 +72,15 @@ class $AssetsImagesIconsGen {
   SvgGenImage get road => const SvgGenImage('assets/images/icons/road.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [accessory, bike, electric, mountain, road];
+  List<SvgGenImage> get values => [
+    accessory,
+    bike,
+    electric,
+    heartSelected,
+    heart,
+    mountain,
+    road,
+  ];
 }
 
 class $AssetsImagesNavBarIconsGen {

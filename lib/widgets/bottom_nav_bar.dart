@@ -88,6 +88,7 @@ class _BottomNavBarState extends State<BottomNavBar>
                 child: CustomContainer(
                   hasStroke: true,
                   isCentered: true,
+                  hasShadow: true,
                   radius: 10.0,
                   gradient: AppTheme.linearGradient,
                   child: _getSelectedIcon().svg(

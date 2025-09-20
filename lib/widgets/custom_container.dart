@@ -13,6 +13,8 @@ class CustomContainer extends StatelessWidget {
     this.hasStroke = false,
     this.isCentered = false,
     this.isBlur = false,
+    this.hasShadow = false,
+    this.blurSigma = 50.0,
     required this.radius,
     required this.child,
     required this.gradient,
@@ -24,46 +26,67 @@ class CustomContainer extends StatelessWidget {
   final bool hasStroke;
   final bool isCentered;
   final bool isBlur;
+  final bool hasShadow;
   final LinearGradient gradient;
   final double radius;
+  final double blurSigma;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: isCentered ? Alignment.center : AlignmentDirectional.topStart,
       children: [
-        if (isBlur)
-          ClipPath(
-            clipper: CustomContainerClipper(
-              isBottomRightSkew: isBottomRightSkew,
-              radius: radius,
-            ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
-              child: Container(
-                width: width,
-                height: height,
-                decoration: BoxDecoration(gradient: gradient),
-              ),
-            ),
-          ),
         Stack(
           children: [
-            if (!isBlur)
-              CustomPaint(
-                painter: isBottomRightSkew
-                    ? BottomRightSkewPainter(radius: radius)
-                    : FullSkewPainter(gradient: gradient, radius: radius),
-                size: Size(width, height),
+            CustomPaint(
+              painter: isBottomRightSkew
+                  ? BottomRightSkewPainter(
+                      radius: radius,
+                      hasShadow: hasShadow,
+                      isBlur: isBlur,
+                    )
+                  : FullSkewPainter(
+                      gradient: gradient,
+                      radius: radius,
+                      hasShadow: hasShadow,
+                      isBlur: isBlur,
+                    ),
+              size: Size(width, height),
+            ),
+            if (isBlur)
+              ClipPath(
+                clipper: CustomContainerClipper(
+                  isBottomRightSkew: isBottomRightSkew,
+                  radius: radius,
+                ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: blurSigma,
+                    sigmaY: blurSigma,
+                  ),
+                  child: Container(
+                    width: width,
+                    height: height,
+                    decoration: BoxDecoration(gradient: gradient),
+                  ),
+                ),
               ),
             if (hasStroke)
               CustomPaint(
                 painter: isBottomRightSkew
-                    ? BottomRightSkewPainter(isStroke: true, radius: radius)
+                    ? BottomRightSkewPainter(
+                        isStroke: true,
+                        radius: radius,
+
+                        isBlur: isBlur,
+                        hasShadow: hasShadow,
+                      )
                     : FullSkewPainter(
                         isStroke: true,
                         gradient: gradient,
                         radius: radius,
+                        isBlur: isBlur,
+                        hasShadow: hasShadow,
                       ),
                 size: Size(width, height),
               ),
@@ -80,10 +103,14 @@ class FullSkewPainter extends CustomPainter {
     this.isStroke = false,
     required this.gradient,
     required this.radius,
+    required this.isBlur,
+    required this.hasShadow,
   });
   final bool isStroke;
   final LinearGradient gradient;
   final double radius;
+  final bool isBlur;
+  final bool hasShadow;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -100,18 +127,22 @@ class FullSkewPainter extends CustomPainter {
 
       canvas.drawPath(path, paint);
     } else {
-      final fillPaint = Paint()
-        ..shader = gradient.createShader(
-          Rect.fromLTWH(0, 0, size.width, size.height),
-        );
-      canvas.drawPath(path, fillPaint);
+      if (!isBlur) {
+        final fillPaint = Paint()
+          ..shader = gradient.createShader(
+            Rect.fromLTWH(0, 0, size.width, size.height),
+          );
+        canvas.drawPath(path, fillPaint);
+      }
 
-      canvas.drawShadow(
-        path,
-        AppColors.shadow.withValues(alpha: .60),
-        30,
-        true,
-      );
+      if (hasShadow) {
+        canvas.drawShadow(
+          path,
+          AppColors.shadow.withValues(alpha: .60),
+          30,
+          true,
+        );
+      }
     }
   }
 
@@ -122,9 +153,16 @@ class FullSkewPainter extends CustomPainter {
 }
 
 class BottomRightSkewPainter extends CustomPainter {
-  const BottomRightSkewPainter({this.isStroke = false, required this.radius});
+  const BottomRightSkewPainter({
+    this.isStroke = false,
+    required this.radius,
+    required this.isBlur,
+    required this.hasShadow,
+  });
   final bool isStroke;
   final double radius;
+  final bool isBlur;
+  final bool hasShadow;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -147,17 +185,22 @@ class BottomRightSkewPainter extends CustomPainter {
 
       canvas.drawPath(path, paint);
     } else {
-      final fillPaint = Paint()
-        ..shader = AppTheme.greyBlueGradient
-            .withOpacity(0.6)
-            .createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-      canvas.drawPath(path, fillPaint);
-      canvas.drawShadow(
-        path,
-        AppColors.shadow.withValues(alpha: .60),
-        60,
-        true,
-      );
+      if (!isBlur) {
+        final fillPaint = Paint()
+          ..shader = AppTheme.greyBlueGradient
+              .withOpacity(0.6)
+              .createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+        canvas.drawPath(path, fillPaint);
+      }
+
+      if (hasShadow) {
+        canvas.drawShadow(
+          path,
+          AppColors.shadow.withValues(alpha: .60),
+          60,
+          true,
+        );
+      }
     }
   }
 
