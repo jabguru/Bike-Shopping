@@ -10,17 +10,19 @@ class CustomContainer extends StatelessWidget {
     required this.child,
     this.isBottomRightSkew = false,
     this.hasStroke = false,
+    this.isCentered = false,
   });
   final double width;
   final double height;
   final Widget child;
   final bool isBottomRightSkew;
   final bool hasStroke;
+  final bool isCentered;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: Alignment.center,
+      alignment: isCentered ? Alignment.center : AlignmentDirectional.topStart,
       children: [
         Stack(
           children: [
