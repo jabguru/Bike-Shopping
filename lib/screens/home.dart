@@ -34,7 +34,11 @@ class HomeScreen extends StatelessWidget {
                             color: AppColors.white,
                           ),
                         ),
-                        Button(child: Assets.images.search.svg()),
+                        Button(
+                          strokeBlendMode: BlendMode.overlay,
+                          strokeOpacity: 0.6,
+                          child: Assets.images.search.svg(),
+                        ),
                       ],
                     ),
                   ),

@@ -9,6 +9,8 @@ class Button extends StatelessWidget {
     this.height,
     this.backgroundGradient,
     this.onTap,
+    this.strokeBlendMode = BlendMode.srcOver,
+    this.strokeOpacity = 1.0,
     super.key,
   });
   final Widget child;
@@ -16,6 +18,8 @@ class Button extends StatelessWidget {
   final double? height;
   final LinearGradient? backgroundGradient;
   final VoidCallback? onTap;
+  final BlendMode strokeBlendMode;
+  final double strokeOpacity;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,8 @@ class Button extends StatelessWidget {
       child: GradientStroke(
         width: width ?? 44.0,
         height: height ?? 44.0,
+        blendMode: strokeBlendMode,
+        opacity: strokeOpacity,
         child: AnimatedContainer(
           duration: Durations.short4,
           width: width,
