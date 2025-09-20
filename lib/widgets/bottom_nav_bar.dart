@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bike_shopping/gen/assets.gen.dart';
 import 'package:bike_shopping/theme/theme.dart';
 import 'package:bike_shopping/widgets/custom_container.dart';
@@ -69,15 +71,35 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   @override
   Widget build(BuildContext context) {
+    final double height = 103.5;
+    final fillGradient = LinearGradient(
+      colors: [Color(0xFF363E51), Color(0xFF181C24)],
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+    );
+
     return SizedBox(
-      height: 103.5,
+      height: height,
       width: double.infinity,
       child: Stack(
         fit: StackFit.expand,
         children: [
+          ClipPath(
+            clipper: BottomNavClipper(),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+              child: Container(
+                width: double.infinity,
+                height: height,
+                decoration: BoxDecoration(
+                  gradient: fillGradient.withOpacity(0.4),
+                ),
+              ),
+            ),
+          ),
           CustomPaint(
-            size: Size(double.infinity, 103.5),
-            painter: BottomNavBarPainter(),
+            size: Size(double.infinity, height),
+            painter: BottomNavBarStrokePainter(),
           ),
           AnimatedBuilder(
             animation: _slideAnimation,
@@ -188,33 +210,48 @@ class NavIcon extends StatelessWidget {
   }
 }
 
-class BottomNavBarPainter extends CustomPainter {
+class BottomNavBarStrokePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final fillGradient = LinearGradient(
-      colors: [Color(0xFF363E51), Color(0xFF181C24)],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
+    LinearGradient strokeGradient = LinearGradient(
+      colors: [Color(0xFFFFFFFF), Color(0xFF000000).withValues(alpha: 0.0)],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
     );
 
-    final fillPaint = Paint()
-      ..shader = fillGradient
-          .withOpacity(0.4)
+    final paint = Paint()
+      ..shader = strokeGradient
+          .withOpacity(0.2)
           .createShader(Rect.fromLTWH(0, 0, size.width, size.height))
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3);
+      ..style = PaintingStyle.stroke
+      ..blendMode = BlendMode.overlay
+      ..strokeWidth = 2.0;
 
-    final path = Path()
-      ..moveTo(0, size.height * 0.30)
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width, size.height)
-      ..lineTo(0, size.height)
-      ..close();
-
-    canvas.drawPath(path, fillPaint);
+    canvas.drawPath(_getNavBarPath(size), paint);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return false;
   }
+}
+
+Path _getNavBarPath(Size size) {
+  final path = Path()
+    ..moveTo(0, size.height * 0.30)
+    ..lineTo(size.width, 0)
+    ..lineTo(size.width, size.height)
+    ..lineTo(0, size.height)
+    ..close();
+  return path;
+}
+
+class BottomNavClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    return _getNavBarPath(size);
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
