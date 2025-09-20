@@ -22,6 +22,14 @@ class AppTheme {
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+  static final greyBlueGradient = LinearGradient(
+    colors: [
+      AppColors.greyBlue.withValues(alpha: 0.6),
+      AppColors.darkBlue.withValues(alpha: 0.6),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
 
 // ThemeData get kThemeData => ThemeData(

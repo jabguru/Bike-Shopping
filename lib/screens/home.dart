@@ -2,7 +2,9 @@ import 'package:bike_shopping/gen/assets.gen.dart';
 import 'package:bike_shopping/theme/colors.dart';
 import 'package:bike_shopping/widgets/bottom_nav_bar.dart';
 import 'package:bike_shopping/widgets/button.dart';
+import 'package:bike_shopping/widgets/custom_container.dart';
 import 'package:bike_shopping/widgets/custom_scaffold.dart';
+import 'package:bike_shopping/widgets/space.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -34,7 +36,22 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Expanded(child: SingleChildScrollView(child: Column())),
+                  HorizontalSpacing(24.0),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          CustomContainer(
+                            child: SizedBox(),
+                            width: 350 / 0,
+                            height: 240.0,
+                            isBottomRightSkew: true,
+                            hasStroke: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

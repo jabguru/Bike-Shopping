@@ -85,6 +85,7 @@ class _BottomNavBarState extends State<BottomNavBar>
                 left: 24 + _getCurrentPosition(context),
                 bottom: 32,
                 child: CustomContainer(
+                  hasStroke: true,
                   child: _getSelectedIcon().svg(
                     colorFilter: ColorFilter.mode(
                       Colors.white,

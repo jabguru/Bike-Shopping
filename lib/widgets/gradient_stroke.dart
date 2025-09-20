@@ -34,6 +34,7 @@ class GradientStrokePainter extends CustomPainter {
         Rect.fromLTWH(0, 0, size.width, size.height),
       )
       ..style = PaintingStyle.stroke
+      ..blendMode = BlendMode.overlay
       ..strokeWidth = 1.0;
 
     final rect = Rect.fromLTWH(0, 0, size.width, size.height);
