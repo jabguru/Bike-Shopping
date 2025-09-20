@@ -21,20 +21,29 @@ class _CategoriesState extends State<Categories> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 99.0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: Category.values
-            .map(
-              (category) => CategoryIcon(
-                category: category,
-                selected: _selected,
-                onTap: () => setState(() {
-                  _selected = category;
-                }),
-              ),
-            )
-            .toList(),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned(
+            top: -14.0,
+            width: MediaQuery.sizeOf(context).width - 40.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: Category.values
+                  .map(
+                    (category) => CategoryIcon(
+                      category: category,
+                      selected: _selected,
+                      onTap: () => setState(() {
+                        _selected = category;
+                      }),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
