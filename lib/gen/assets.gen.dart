@@ -53,6 +53,10 @@ class $AssetsImagesIconsGen {
   /// File path: assets/images/icons/bike.svg
   SvgGenImage get bike => const SvgGenImage('assets/images/icons/bike.svg');
 
+  /// File path: assets/images/icons/electric.svg
+  SvgGenImage get electric =>
+      const SvgGenImage('assets/images/icons/electric.svg');
+
   /// File path: assets/images/icons/mountain.svg
   SvgGenImage get mountain =>
       const SvgGenImage('assets/images/icons/mountain.svg');
@@ -61,7 +65,7 @@ class $AssetsImagesIconsGen {
   SvgGenImage get road => const SvgGenImage('assets/images/icons/road.svg');
 
   /// List of all assets
-  List<SvgGenImage> get values => [accessory, bike, mountain, road];
+  List<SvgGenImage> get values => [accessory, bike, electric, mountain, road];
 }
 
 class $AssetsImagesNavBarIconsGen {

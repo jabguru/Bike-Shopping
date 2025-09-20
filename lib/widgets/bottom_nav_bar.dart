@@ -106,31 +106,26 @@ class _BottomNavBarState extends State<BottomNavBar>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 NavIcon(
-                  icon: Assets.images.navBarIcons.bicycle,
                   value: NavBarItem.home,
                   selected: _selectedItem,
                   onTap: () => _onItemTapped(NavBarItem.home),
                 ),
                 NavIcon(
-                  icon: Assets.images.navBarIcons.map,
                   value: NavBarItem.map,
                   selected: _selectedItem,
                   onTap: () => _onItemTapped(NavBarItem.map),
                 ),
                 NavIcon(
-                  icon: Assets.images.navBarIcons.cart,
                   value: NavBarItem.cart,
                   selected: _selectedItem,
                   onTap: () => _onItemTapped(NavBarItem.cart),
                 ),
                 NavIcon(
-                  icon: Assets.images.navBarIcons.person,
                   value: NavBarItem.profile,
                   selected: _selectedItem,
                   onTap: () => _onItemTapped(NavBarItem.profile),
                 ),
                 NavIcon(
-                  icon: Assets.images.navBarIcons.doc,
                   value: NavBarItem.doc,
                   selected: _selectedItem,
                   onTap: () => _onItemTapped(NavBarItem.doc),
@@ -161,16 +156,29 @@ class _BottomNavBarState extends State<BottomNavBar>
 
 class NavIcon extends StatelessWidget {
   const NavIcon({
-    required this.icon,
     required this.value,
     required this.selected,
     required this.onTap,
     super.key,
   });
-  final SvgGenImage icon;
   final NavBarItem value;
   final NavBarItem selected;
   final VoidCallback onTap;
+
+  SvgGenImage get icon {
+    switch (value) {
+      case NavBarItem.home:
+        return Assets.images.navBarIcons.bicycle;
+      case NavBarItem.map:
+        return Assets.images.navBarIcons.map;
+      case NavBarItem.cart:
+        return Assets.images.navBarIcons.cart;
+      case NavBarItem.profile:
+        return Assets.images.navBarIcons.person;
+      case NavBarItem.doc:
+        return Assets.images.navBarIcons.doc;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -199,18 +207,15 @@ class BottomNavBarPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final fillGradient = LinearGradient(
-      colors: [
-        Color(0xFF363E51).withValues(alpha: .4),
-        Color(0xFF181C24).withValues(alpha: .4),
-      ],
+      colors: [Color(0xFF363E51), Color(0xFF181C24)],
       begin: Alignment.centerLeft,
       end: Alignment.centerRight,
     );
 
     final fillPaint = Paint()
-      ..shader = fillGradient.createShader(
-        Rect.fromLTWH(0, 0, size.width, size.height),
-      )
+      ..shader = fillGradient
+          .withOpacity(0.4)
+          .createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3);
 
     final path = Path()

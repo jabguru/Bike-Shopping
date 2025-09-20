@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class GradientStroke extends StatelessWidget {
   const GradientStroke({
     required this.child,
-    this.width = 44.0,
-    this.height = 44.0,
+    required this.width,
+    required this.height,
     super.key,
   });
   final Widget child;
@@ -30,9 +30,9 @@ class GradientStrokePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..shader = AppTheme.neutralGradient.createShader(
-        Rect.fromLTWH(0, 0, size.width, size.height),
-      )
+      ..shader = AppTheme.neutralGradient
+          .withOpacity(0.6)
+          .createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..style = PaintingStyle.stroke
       ..blendMode = BlendMode.overlay
       ..strokeWidth = 1.0;

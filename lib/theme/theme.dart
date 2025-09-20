@@ -15,18 +15,12 @@ class AppTheme {
   );
 
   static final neutralGradient = LinearGradient(
-    colors: [
-      Color(0xFFFFFFFF).withValues(alpha: 0.6),
-      Color(0xFF000000).withValues(alpha: 0.6),
-    ],
+    colors: [Color(0xFFFFFFFF), Color(0xFF000000)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
   static final greyBlueGradient = LinearGradient(
-    colors: [
-      AppColors.greyBlue.withValues(alpha: 0.6),
-      AppColors.darkBlue.withValues(alpha: 0.6),
-    ],
+    colors: [AppColors.greyBlue, AppColors.darkBlue],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

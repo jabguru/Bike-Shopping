@@ -79,9 +79,9 @@ class FullSkewPainter extends CustomPainter {
 
     if (isStroke) {
       final paint = Paint()
-        ..shader = AppTheme.neutralGradient.createShader(
-          Rect.fromLTWH(0, 0, size.width, size.height),
-        )
+        ..shader = AppTheme.neutralGradient
+            .withOpacity(0.6)
+            .createShader(Rect.fromLTWH(0, 0, size.width, size.height))
         ..style = PaintingStyle.stroke
         ..blendMode = BlendMode.overlay
         ..strokeWidth = 1.0;
@@ -118,29 +118,25 @@ class BottomRightSkewPainter extends CustomPainter {
 
     if (isStroke) {
       LinearGradient strokeGradient = LinearGradient(
-        colors: [
-          Color(0xFFFFFFFF).withValues(alpha: 0.2),
-          Color(0xFF000000).withValues(alpha: 0.2),
-          Color(0xFF000000).withValues(alpha: 0.2),
-        ],
+        colors: [Color(0xFFFFFFFF), Color(0xFF000000), Color(0xFF000000)],
         stops: [0, 0.84, 1],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
 
       final paint = Paint()
-        ..shader = strokeGradient.createShader(
-          Rect.fromLTWH(0, 0, size.width, size.height),
-        )
+        ..shader = strokeGradient
+            .withOpacity(0.2)
+            .createShader(Rect.fromLTWH(0, 0, size.width, size.height))
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0;
 
       canvas.drawPath(path, paint);
     } else {
       final fillPaint = Paint()
-        ..shader = AppTheme.greyBlueGradient.createShader(
-          Rect.fromLTWH(0, 0, size.width, size.height),
-        );
+        ..shader = AppTheme.greyBlueGradient
+            .withOpacity(0.6)
+            .createShader(Rect.fromLTWH(0, 0, size.width, size.height));
       canvas.drawPath(path, fillPaint);
       canvas.drawShadow(
         path,
